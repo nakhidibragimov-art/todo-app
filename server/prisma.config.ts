@@ -1,6 +1,5 @@
-
 import "dotenv/config";
-import { defineConfig, env } from "prisma/config";
+import { defineConfig } from "prisma/config";
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
@@ -8,6 +7,9 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: env("DATABASE_URL"),
+    // process.env instead of env(): `prisma generate` (run on npm install) doesn't need
+    // a database, so a missing .env must not break installation. Migrate commands
+    // still fail with a clear error if DATABASE_URL is not set.
+    url: process.env.DATABASE_URL ?? "",
   },
 });
